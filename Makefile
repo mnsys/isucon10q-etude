@@ -85,11 +85,15 @@ deploy-3-web:
 	ssh ${HOST3} sudo systemctl restart nginx
 
 deploy-1-db:
-	cat host1-my.cnf | ssh ${HOST1} sudo tee /etc/mysql/my.cnf >/dev/null
+	cat host3-mysqld.cnf | ssh ${HOST1} sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf>/dev/null
+	cat host3-mysql.service | ssh ${HOST1} sudo tee /lib/systemd/system/mysql.service>/dev/null
+	ssh ${HOST1} sudo systemctl daemon-reload
 	ssh ${HOST1} sudo systemctl restart mysql
 
 deploy-2-db:
-	cat host2-my.cnf | ssh ${HOST2} sudo tee /etc/mysql/my.cnf >/dev/null
+	cat host3-mysqld.cnf | ssh ${HOST2} sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf>/dev/null
+	cat host3-mysql.service | ssh ${HOST2} sudo tee /lib/systemd/system/mysql.service>/dev/null
+	ssh ${HOST2} sudo systemctl daemon-reload
 	ssh ${HOST2} sudo systemctl restart mysql
 
 deploy-3-db:
