@@ -20,10 +20,79 @@ deploy:
 	ssh ${HOST1} sudo systemctl daemon-reload
 	ssh ${HOST1} sudo systemctl start isuumo.go
 
-deploy-nginx:
+deploy-all-all:
+	@make deploy-1-all
+	@make deploy-2-all
+	@make deploy-3-all
+
+deploy-1-all:
+	@make deploy-1-web
+	@make deploy-1-db
+	@make deploy-1-app
+
+deploy-2-all:
+	@make deploy-2-web
+	@make deploy-2-db
+	@make deploy-2-app
+
+deploy-2-all:
+	@make deploy-3-web
+	@make deploy-3-db
+	@make deploy-3-app
+
+deploy-1-app:
+	go build -o isuumo
+	ssh ${HOST1} sudo systemctl stop isuumo.go
+	scp isuumo ${HOST1}:~/isuumo/webapp/go/isuumo
+	scp env.sh ${HOST1}:~/env.sh
+	cat host1-isuumo.go.service | ssh ${HOST1} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
+	ssh ${HOST1} sudo systemctl daemon-reload
+	ssh ${HOST1} sudo systemctl start isuumo.go
+
+deploy-2-app:
+	go build -o isuumo
+	ssh ${HOST2} sudo systemctl stop isuumo.go
+	scp isuumo ${HOST2}:~/isuumo/webapp/go/isuumo
+	scp env.sh ${HOST2}:~/env.sh
+	cat host2-isuumo.go.service | ssh ${HOST2} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
+	ssh ${HOST2} sudo systemctl daemon-reload
+	ssh ${HOST2} sudo systemctl start isuumo.go
+
+deploy-3-app:
+	go build -o isuumo
+	ssh ${HOST3} sudo systemctl stop isuumo.go
+	scp isuumo ${HOST3}:~/isuumo/webapp/go/isuumo
+	scp env.sh ${HOST3}:~/env.sh
+	cat host3-isuumo.go.service | ssh ${HOST3} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
+	ssh ${HOST3} sudo systemctl daemon-reload
+	ssh ${HOST3} sudo systemctl start isuumo.go
+
+deploy-1-web:
 	cat host1-nginx.conf | ssh ${HOST1} sudo tee /etc/nginx/nginx.conf >/dev/null
 	ssh ${HOST1} sudo nginx -t
 	ssh ${HOST1} sudo systemctl restart nginx
+
+deploy-2-web:
+	cat host2-nginx.conf | ssh ${HOST2} sudo tee /etc/nginx/nginx.conf >/dev/null
+	ssh ${HOST2} sudo nginx -t
+	ssh ${HOST2} sudo systemctl restart nginx
+
+deploy-3-web:
+	cat host3-nginx.conf | ssh ${HOST3} sudo tee /etc/nginx/nginx.conf >/dev/null
+	ssh ${HOST3} sudo nginx -t
+	ssh ${HOST3} sudo systemctl restart nginx
+
+deploy-1-db:
+	cat host1-my.cnf | ssh ${HOST1} sudo tee /etc/mysql/my.cnf >/dev/null
+	ssh ${HOST1} sudo systemctl restart mysql
+
+deploy-2-db:
+	cat host2-my.cnf | ssh ${HOST2} sudo tee /etc/mysql/my.cnf >/dev/null
+	ssh ${HOST2} sudo systemctl restart mysql
+
+deploy-3-db:
+	cat host3-my.cnf | ssh ${HOST3} sudo tee /etc/mysql/my.cnf >/dev/null
+	ssh ${HOST3} sudo systemctl restart mysql
 
 host0:
 	ssh ${HOST0}
