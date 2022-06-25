@@ -94,6 +94,8 @@ deploy-2-db:
 
 deploy-3-db:
 	cat host3-mysqld.cnf | ssh ${HOST3} sudo tee /etc/mysql/mysql.conf.d/mysqld.cnf>/dev/null
+	cat host3-mysql.service | ssh ${HOST3} sudo tee /lib/systemd/system/mysql.service>/dev/null
+	ssh ${HOST3} sudo systemctl daemon-reload
 	ssh ${HOST3} sudo systemctl restart mysql
 
 host0:
