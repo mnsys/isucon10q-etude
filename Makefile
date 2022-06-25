@@ -1,7 +1,7 @@
-HOST0=isucon@54.178.196.217
-HOST1=isucon@3.112.34.175
-HOST2=isucon@13.113.90.76
-HOST3=isucon@54.95.250.134
+HOST0=isucon@35.77.73.48
+HOST1=isucon@18.176.52.57
+HOST2=isucon@54.95.29.70
+HOST3=isucon@54.95.53.252
 
 TIMEID := $(shell date +%Y%m%d-%H%M%S)
 
@@ -21,16 +21,17 @@ deploy:
 	cat host1-nginx.conf | ssh ${HOST1} sudo tee /etc/nginx/nginx.conf >/dev/null
 	ssh ${HOST1} sudo nginx -t
 	ssh ${HOST1} sudo systemctl restart nginx
-web0:
+
+host0:
 	ssh ${HOST0}
 
-web1:
+host1:
 	ssh ${HOST1}
 
-web2:
+host2:
 	ssh ${HOST2}
 
-web3:
+host3:
 	ssh -L 13306:127.0.0.1:3306 ${HOST3}
 	# mysql -h 127.0.0.1 -P 13306 -uisucon -pisucon isucondition
 
