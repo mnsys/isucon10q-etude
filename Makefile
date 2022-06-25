@@ -9,15 +9,18 @@ TIMEID := $(shell date +%Y%m%d-%H%M%S)
 # https://github.com/hirosuzuki/go-sql-logger
 
 build:
+	go build -o isuumo
 
 deploy:
-	ssh ${HOST1} sudo systemctl stop isucondition.go
-	scp isucondition ${HOST1}:~/webapp/go/isucondition
+	go build -o isuumo
+	ssh ${HOST1} sudo systemctl stop isuumo.go
+	scp isuumo ${HOST1}:~/isuumo/webapp/go/isuumo
 	scp env.sh ${HOST1}:~/env.sh
-	scp 0_Schema.sql ${HOST1}:~/webapp/sql/0_Schema.sql
-	cat isucondition.go.service | ssh ${HOST1} sudo tee /etc/systemd/system/isucondition.go.service >/dev/null
+	cat host1-isuumo.go.service | ssh ${HOST1} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
 	ssh ${HOST1} sudo systemctl daemon-reload
-	ssh ${HOST1} sudo systemctl start isucondition.go
+	ssh ${HOST1} sudo systemctl start isuumo.go
+
+deploy-nginx:
 	cat host1-nginx.conf | ssh ${HOST1} sudo tee /etc/nginx/nginx.conf >/dev/null
 	ssh ${HOST1} sudo nginx -t
 	ssh ${HOST1} sudo systemctl restart nginx
@@ -37,7 +40,7 @@ host3:
 
 fetch-conf:
 	mkdir -p files
-	scp ${HOST1}:/etc/systemd/system/isucondition.go.service files
+	scp ${HOST1}:/etc/systemd/system/isuumo.go.service files
 	scp ${HOST1}:/etc/nginx/nginx.conf files
 	scp ${HOST1}:/etc/mysql/my.cnf files
 
