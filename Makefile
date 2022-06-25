@@ -82,16 +82,19 @@ deploy-3-app:
 
 deploy-1-web:
 	cat host1-nginx.conf | ssh ${HOST1} sudo tee /etc/nginx/nginx.conf >/dev/null
+	cat host1-isuumo.conf | ssh ${HOST1} sudo tee /etc/nginx/sites-available/isuumo.conf >/dev/null
 	ssh ${HOST1} sudo nginx -t
 	ssh ${HOST1} sudo systemctl restart nginx
 
 deploy-2-web:
 	cat host2-nginx.conf | ssh ${HOST2} sudo tee /etc/nginx/nginx.conf >/dev/null
+	cat host2-isuumo.conf | ssh ${HOST2} sudo tee /etc/nginx/sites-available/isuumo.conf >/dev/null
 	ssh ${HOST2} sudo nginx -t
 	ssh ${HOST2} sudo systemctl restart nginx
 
 deploy-3-web:
 	cat host3-nginx.conf | ssh ${HOST3} sudo tee /etc/nginx/nginx.conf >/dev/null
+	cat host3-isuumo.conf | ssh ${HOST3} sudo tee /etc/nginx/sites-available/isuumo.conf >/dev/null
 	ssh ${HOST3} sudo nginx -t
 	ssh ${HOST3} sudo systemctl restart nginx
 
