@@ -58,40 +58,32 @@ duration_index = 10
 #name = "stylesheets"
 
 [[bundle]]
-regexp = '^(POST) /api/condition/.+$'
-name = "POST /api/condition/*"
+regexp = '^(GET|HEAD) /api/estate/search\?'
+name = "GET /api/estate/search?*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /api/isu/.+/icon'
-name = "GET /api/isu/condition/*/icon"
+regexp = '^(GET|HEAD) /api/estate/[0-9]+'
+name = "GET /api/escate/[0-9]*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /api/isu/.+'
-name = "GET /api/isu/condition/*"
+regexp = '^(POST) /api/estate/req_doc/[0-9]+'
+name = "POST /api/escate/req_doc/[0-9]*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /api/condition/.+'
-name = "GET /api/condition/*"
+regexp = '^(GET|HEAD) /api/chair/search\?'
+name = "GET /api/chair/search?*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /isu/.+/condition'
-name = "GET /isu/*/condition"
+regexp = '^(GET|HEAD) /api/chair/[0-9]+'
+name = "GET /api/chair/*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /\?jwt=.+'
-name = "GET /?jwt=*"
+regexp = '^(GET|HEAD) /api/recommended_estate/[0-9]+'
+name = "GET /api/recommended_estate/*"
 
 [[bundle]]
-regexp = '^(GET|HEAD) /assets/.+'
-name = "GET /assets/*"
-
-[[bundle]]
-regexp = '^(GET|HEAD) /isu/.+/graph'
-name = "GET /isu/*/graph"
-
-[[bundle]]
-regexp = '^(GET|HEAD) /isu/.+'
-name = "GET /isu/*"
+regexp = '^(POST) /api/chair/buy/[0-9]+'
+name = "POST /api/chair/buy/*"
 
 # You can replace the part of urls which matched to your regular expressions.
 # For overview of regexp syntax: https://golang.org/pkg/regexp/syntax/
