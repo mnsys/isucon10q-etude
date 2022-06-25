@@ -35,7 +35,7 @@ deploy-2-all:
 	@make deploy-2-db
 	@make deploy-2-app
 
-deploy-2-all:
+deploy-3-all:
 	@make deploy-3-web
 	@make deploy-3-db
 	@make deploy-3-app
