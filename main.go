@@ -884,14 +884,12 @@ func searchEstateNazotte(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	st_text := coordinates.coordinatesToText()
-
 	// TODO:ロジック見直し
-	// estatesInBoundingBox := []Estate{}
 	b := coordinates.getBoundingBox()
+	// estatesInBoundingBox := []Estate{}
 	estatesInPolygon := []Estate{}
 	// query := `SELECT * FROM estate WHERE latitude <= ? AND latitude >= ? AND longitude <= ? AND longitude >= ? ORDER BY d_popularity ASC, id ASC`
-	query := fmt.Sprintf(`SELECT * FROM estate WHERE latitude <= ? AND latitude >= ? AND longitude <= ? AND longitude >= ? AND ST_Contains(ST_PolygonFromText( /* nazotte */ %s), Point(latitude, longitude)) ORDER BY d_popularity ASC, id ASC LIMIT 50`, st_text)
+	query := fmt.Sprintf(`SELECT * FROM estate WHERE latitude <= ? AND latitude >= ? AND longitude <= ? AND longitude >= ? AND ST_Contains(ST_PolygonFromText(%s), Point(latitude, longitude)) ORDER BY popularity DESC, id ASC`, coordinates.coordinatesToText())
 	err = db.Select(&estatesInPolygon, query, b.BottomRightCorner.Latitude, b.TopLeftCorner.Latitude, b.BottomRightCorner.Longitude, b.TopLeftCorner.Longitude)
 	if err == sql.ErrNoRows {
 		c.Echo().Logger.Infof("select * from estate where latitude ...", err)
@@ -900,6 +898,25 @@ func searchEstateNazotte(c echo.Context) error {
 		c.Echo().Logger.Errorf("database execution error : %v", err)
 		return c.NoContent(http.StatusInternalServerError)
 	}
+
+	// estatesInPolygon := []Estate{}
+	// for _, estate := range estatesInBoundingBox {
+	// 	validatedEstate := Estate{}
+
+	// 	point := fmt.Sprintf("'POINT(%f %f)'", estate.Latitude, estate.Longitude)
+	// 	query := fmt.Sprintf(`SELECT * FROM estate WHERE id = ? AND ST_Contains(ST_PolygonFromText( /* nazotte */ %s), ST_GeomFromText(%s))`, coordinates.coordinatesToText(), point)
+	// 	err = db.Get(&validatedEstate, query, estate.ID)
+	// 	if err != nil {
+	// 		if err == sql.ErrNoRows {
+	// 			continue
+	// 		} else {
+	// 			c.Echo().Logger.Errorf("db access is failed on executing validate if estate is in polygon : %v", err)
+	// 			return c.NoContent(http.StatusInternalServerError)
+	// 		}
+	// 	} else {
+	// 		estatesInPolygon = append(estatesInPolygon, validatedEstate)
+	// 	}
+	// }
 
 	var re EstateSearchResponse
 	re.Estates = []Estate{}
