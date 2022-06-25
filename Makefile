@@ -119,7 +119,7 @@ perf-logs-viewer:
 	perf-logs-viewer
 
 pprof:
-	go tool pprof -http="127.0.0.1:8081" logs/latest/cpu-web1.pprof 
+	go tool pprof -http="127.0.0.1:8081" logs/latest/cpu-web1.pprof
 
 collect-logs:
 	mkdir -p logs/${TIMEID}
@@ -132,6 +132,21 @@ collect-logs:
 	ssh ${HOST1} sudo truncate -c -s 0 /var/log/nginx/access.log
 	ssh ${HOST1} sudo truncate -c -s 0 /tmp/sql.log
 
+collect-logs2:
+	mkdir -p logs/${TIMEID}
+	rm -f logs/latest
+	ln -sf ${TIMEID} logs/latest
+	scp ${HOST2}:/tmp/cpu.pprof logs/latest/cpu-web1.pprof
+	ssh ${HOST2} sudo chmod 644 /var/log/nginx/access.log
+	scp ${HOST2}:/var/log/nginx/access.log logs/latest/access-web1.log
+	scp ${HOST2}:/tmp/sql.log logs/latest/sql-web1.log
+	ssh ${HOST2} sudo truncate -c -s 0 /var/log/nginx/access.log
+	ssh ${HOST2} sudo truncate -c -s 0 /tmp/sql.log
+
 truncate-logs:
 	ssh ${HOST1} sudo truncate -c -s 0 /var/log/nginx/access.log
 	ssh ${HOST1} sudo truncate -c -s 0 /tmp/sql.log
+
+truncate-logs2:
+	ssh ${HOST2} sudo truncate -c -s 0 /var/log/nginx/access.log
+	ssh ${HOST2} sudo truncate -c -s 0 /tmp/sql.log
