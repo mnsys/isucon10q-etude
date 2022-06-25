@@ -15,7 +15,9 @@ deploy:
 	go build -o isuumo
 	ssh ${HOST1} sudo systemctl stop isuumo.go
 	scp isuumo ${HOST1}:~/isuumo/webapp/go/isuumo
-	scp env.sh ${HOST1}:~/env.sh
+	scp env.sh ${HOST1}:~/isuumo/webapp/mysql/db/0_Schema.sql
+	scp 0_Schema.sql ${HOST1}:~/isuumo/webapp/mysql/db/0_Schema.sql
+	scp 3_Schema.sql ${HOST1}:~/isuumo/webapp/mysql/db/3_Schema.sql
 	cat host1-isuumo.go.service | ssh ${HOST1} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
 	ssh ${HOST1} sudo systemctl daemon-reload
 	ssh ${HOST1} sudo systemctl start isuumo.go
