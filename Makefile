@@ -15,7 +15,7 @@ deploy:
 	go build -o isuumo
 	ssh ${HOST1} sudo systemctl stop isuumo.go
 	scp isuumo ${HOST1}:~/isuumo/webapp/go/isuumo
-	scp env.sh ${HOST1}:~/isuumo/webapp/mysql/db/0_Schema.sql
+	scp env.sh ${HOST1}:~/env.sh
 	scp 0_Schema.sql ${HOST1}:~/isuumo/webapp/mysql/db/0_Schema.sql
 	scp 3_Schema.sql ${HOST1}:~/isuumo/webapp/mysql/db/3_Schema.sql
 	cat host1-isuumo.go.service | ssh ${HOST1} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
@@ -172,3 +172,6 @@ truncate-logs:
 truncate-logs2:
 	ssh ${HOST2} sudo truncate -c -s 0 /var/log/nginx/access.log
 	ssh ${HOST2} sudo truncate -c -s 0 /tmp/sql.log
+
+discord:
+	curl -H "Content-Type: application/json" -X POST -d '{"username": "bench", "content": "bench"}'
