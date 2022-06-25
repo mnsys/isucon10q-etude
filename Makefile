@@ -22,6 +22,17 @@ deploy:
 	ssh ${HOST1} sudo systemctl daemon-reload
 	ssh ${HOST1} sudo systemctl start isuumo.go
 
+deploy2:
+	go build -o isuumo
+	ssh ${HOST2} sudo systemctl stop isuumo.go
+	scp isuumo ${HOST2}:~/isuumo/webapp/go/isuumo
+	scp env.sh ${HOST2}:~/isuumo/webapp/mysql/db/0_Schema.sql
+	scp 0_Schema.sql ${HOST2}:~/isuumo/webapp/mysql/db/0_Schema.sql
+	scp 3_Schema.sql ${HOST2}:~/isuumo/webapp/mysql/db/3_Schema.sql
+	cat host1-isuumo.go.service | ssh ${HOST2} sudo tee /etc/systemd/system/isuumo.go.service >/dev/null
+	ssh ${HOST2} sudo systemctl daemon-reload
+	ssh ${HOST2} sudo systemctl start isuumo.go
+
 deploy-all-all:
 	@make deploy-1-all
 	@make deploy-2-all
