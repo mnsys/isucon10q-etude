@@ -169,3 +169,6 @@ truncate-logs:
 truncate-logs2:
 	ssh ${HOST2} sudo truncate -c -s 0 /var/log/nginx/access.log
 	ssh ${HOST2} sudo truncate -c -s 0 /tmp/sql.log
+
+discord:
+	curl -H "Content-Type: application/json" -X POST -d '{"username": "bench", "content": "bench"}' https://discord.com/api/webhooks/986892042909126716/56b1cp3DLH7wfwlfFzJPcA-ia83WfH766TuitDA-93ZEW__YFE3QpgOH8G8YQL0fmLDP
